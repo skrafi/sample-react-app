@@ -1,34 +1,37 @@
 import React, { Component } from 'react';
-import axios from 'axios';
-import logo from './logo.svg';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Game} from './components/Game/Game.jsx';
+import {AWS_SERVER} from './env.js'
+import {ClientContext} from './context/clientContext.jsx'
+
+import {w3cwebsocket} from 'websocket';
+
+const local = true;
+const LOCALHOST = 'ws://127.0.0.1:4000'
+const BACKEND = local ? LOCALHOST : AWS_SERVER;
+const client = new w3cwebsocket(BACKEND)
+
 
 class App extends Component {
   state = {
-    data: ''
+    data: '',
+    loading: true
   }
-  componentDidMount = () => {
-    // Make sure to change the (localhost) on the line bellow 
-    // to the public DNS of your EC2 instance
-    axios.get(`http://localhost:4000/sayHello`)
-    .then(res => {
-      const dataFromServer = res.data;
-      this.setState({ data: dataFromServer });
-    });
+  componentWillMount() {
+    client.onopen = () => {
+      console.log('Websocket client connected');
+      this.setState({loading: false})
+    }
   }
   render() {
-    return (
+    return this.state.loading? <div>Loading</div> :
+      <ClientContext.Provider value={client}>
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>Server is saying:</p>
-          <p>
-            {this.state.data}
-          </p>
-          
-        </header>
+        <Game/>}
       </div>
-    );
+      </ClientContext.Provider>
+    
   }
 }
 

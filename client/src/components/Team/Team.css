@@ -1,0 +1,12 @@
+.wrapper {
+    width: 20%;
+    border: 1px solid #cccccc;
+}
+
+.wrappper.red {
+    background-color: red
+}
+
+.wrappper.blue {
+    background-color: blue
+}

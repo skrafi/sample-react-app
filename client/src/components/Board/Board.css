@@ -1,0 +1,52 @@
+.board {
+    display:flex;
+    flex-wrap: wrap;
+    padding: 30px 60px
+}
+
+.card2 { 
+    width: 16%;
+    padding: 10px 20px;
+    height: 100px;
+    border: 1px solid #cccccc;
+    margin: 10px 2%;
+}
+
+.card2:nth-child(5n+5){
+    margin-right: 0;
+}
+.card2:nth-child(5n+1){
+    margin-left: 0;
+}
+
+.card2.clicked-red { 
+    background-color: #fa8072;
+}
+
+.card2.clicked-blue { 
+    background-color:#7cb9e8;
+}
+
+.card2.clicked-neutral { 
+    background-color:#ffe4b5;
+}
+
+.card2.clicked-killer { 
+    background-color:black;
+}
+
+.red {
+    border: 5px solid #fa8072;
+}
+
+.blue {
+    border: 5px solid #7cb9e8;
+}
+
+.neutral {
+    border: 5px solid #ffe4b5;
+}
+
+.killer {
+    border: 5px solid black;
+}
