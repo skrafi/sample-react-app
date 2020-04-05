@@ -8,7 +8,7 @@ import {ClientContext} from './context/clientContext.jsx'
 import {w3cwebsocket} from 'websocket';
 import { Login } from './components/Login/Login';
 
-const local = true;
+const local = false;
 const LOCALHOST = 'ws://127.0.0.1:4000'
 const BACKEND = local ? LOCALHOST : AWS_SERVER;
 const client = new w3cwebsocket(BACKEND)
@@ -30,7 +30,7 @@ class App extends Component {
     }
     client.onmessage=(message)=>{
       const dataFromServer = JSON.parse(message.data);
-      if(dataFromServer.type==='login'){
+      if(dataFromServer.type==='login' && !this.state.user){
         console.log('login in', dataFromServer.data)
          localStorage.setItem('userName', dataFromServer.data.user.name);
          localStorage.setItem('team', dataFromServer.data.user.team);
