@@ -31,13 +31,12 @@ class App extends Component {
     client.onmessage=(message)=>{
       const dataFromServer = JSON.parse(message.data);
       if(dataFromServer.type==='login' && !this.state.user){
-        console.log('login in', dataFromServer.data)
          localStorage.setItem('userName', dataFromServer.data.user.name);
          localStorage.setItem('team', dataFromServer.data.user.team);
          localStorage.setItem('isBoss', dataFromServer.data.user.isBoss);
         this.setState({user: dataFromServer.data.user})
       }
-      if (dataFromServer.type === "teams" ) {
+      if (dataFromServer.type === "teams" || dataFromServer.type === "logout") {
         this.setState({
             teams: {
                 blue: Object.values(dataFromServer.data.teams.blue),
@@ -58,12 +57,8 @@ class App extends Component {
             }
         });
       }
-      if (dataFromServer.type === "logout") {
+      if (dataFromServer.type === "logout-me") {
         this.setState({
-          teams: {
-              blue: Object.values(dataFromServer.data.teams.blue),
-              red: Object.values(dataFromServer.data.teams.red),
-          },
           user: null
       });
       }

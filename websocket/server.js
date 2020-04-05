@@ -124,6 +124,10 @@ wsServer.on('request', function(request){
             json.data = { teams };
           }
           sendMessage(JSON.stringify(json));
+          if (dataFromClient.type === typesDef.LOGOUT) {
+              const json={type:'logout-me'}
+                clients[userId].sendUTF(JSON.stringify(json));
+          }
         }
     });
 
