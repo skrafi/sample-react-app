@@ -4,11 +4,11 @@ import {Menu} from '../Menu/Menu.jsx';
 import {Board} from '../Board/Board.jsx';
 import { ClientContext } from '../../context/clientContext.jsx';
 
-export const Main = ({board})=>{
+export const Main = ({cards,user, isBoss})=>{
     return (
     <ClientContext.Consumer >{client => <div>
         <Menu client={client}/>
-        <Board board={board} client={client}/>
+        <Board client={client} cards={cards} user={user} isBoss={isBoss}/>
     </div>}</ClientContext.Consumer>
         
     )

@@ -6,9 +6,17 @@ export const Menu = ({client}) => {
             type: "restart"
           }))
     }
+    const logout = () => {
+        localStorage.removeItem('userName')
+        localStorage.removeItem('team')
+        client.send(JSON.stringify({
+            type: "logout"
+          }))
+    }
     return <div>
-        <button className="btn primary" onClick={restart}>Restart</button>
-        <button className="btn primary">Tasuj</button>
-        <button className="btn primary">Plansza</button>
+        <button className="button" onClick={restart}>Restart</button>
+        <button className="button">Tasuj</button>
+        <button className="button">Plansza</button>
+        <button className="button" onClick={logout}>Logout</button>
     </div>
 }

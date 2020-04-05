@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-export const Card = ({card, client, index}) => {
+export const Card = ({card, client, index, boss}) => {
     const clickCard = () => {
         client.send(JSON.stringify({
             type: "click-card",
@@ -9,7 +9,7 @@ export const Card = ({card, client, index}) => {
           }))
     }
     return (
-        <div className={`${card.type} card2 ${card.clicked? `clicked-${card.type}` : ''}`} onClick={()=>clickCard()}>
+        <div className={`${boss && card.type} card2 ${card.clicked? `clicked-${card.type}` : ''}`} onClick={()=>clickCard()}>
             { card.word}
         </div>
     )

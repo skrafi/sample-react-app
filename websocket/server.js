@@ -27,6 +27,15 @@ const sendMessage = (json) => {
 
 
 const messages = ['Test'];
+const users = [];
+const teams = {
+    blue: [],
+    red: []
+}
+const boss = {
+    blue: '',
+    red: ''
+}
 let cards = getCards();
 
 const typesDef = {
@@ -35,7 +44,12 @@ const typesDef = {
     CLICK_CARD: 'click-card',
     SHUFFLE: 'shuffle',
     NEW_BOARD: 'new-board',
-    RESTART: 'restart'
+    RESTART: 'restart',
+    LOGIN: 'login',
+    TEAMS: 'teams',
+    SET_BOSS: 'set-boss',
+    BOSS: 'boss',
+    LOGOUT: 'logout',
 }
 
 
@@ -75,6 +89,40 @@ wsServer.on('request', function(request){
             json.data = { cards };
             json.type = typesDef.CARDS;
           }
+          if (dataFromClient.type === typesDef.LOGIN) {
+            console.log('login')
+            const user = {
+                name: dataFromClient.data.name,
+                team: dataFromClient.data.team,
+                isBoss: false, 
+                id: userId,
+            };
+            users.push(user);
+            teams[dataFromClient.data.team].push(user)
+            json.data = { user };
+          }
+          if (dataFromClient.type === typesDef.TEAMS) {
+            console.log('teams', teams)
+            json.data = { teams };
+          }
+          if (dataFromClient.type === typesDef.SET_BOSS) {
+            console.log('set boss')
+            const t = dataFromClient.data.team;
+            const  userId = dataFromClient.data.userId;
+            boss[t] = userId;
+            json.data = { boss: boss};
+          }
+          if (dataFromClient.type === typesDef.BOSS) {
+            console.log('get boss')
+            json.data = { boss: boss};
+          }
+          if (dataFromClient.type === typesDef.LOGOUT) {
+            console.log('logout')
+            delete users[userId];
+            teams.red = teams.red.filter(t=>t.id!==userId)
+            teams.blue = teams.blue.filter(t=>t.id!==userId)
+            json.data = { teams };
+          }
           sendMessage(JSON.stringify(json));
         }
     });
@@ -82,5 +130,8 @@ wsServer.on('request', function(request){
     connection.on('close', function(connection) {
         console.log((new Date()) + " Peer " + userId + " disconnected.");
         delete clients[userId];
+        delete users[userId];
+        teams.red = teams.red.filter(t=>t.id!==userId)
+        teams.blue = teams.blue.filter(t=>t.id!==userId)
       });
 })

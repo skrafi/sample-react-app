@@ -5,39 +5,40 @@ import './Game.css';
 import {Team} from '../Team/Team.jsx';
 import {Main} from '../Main/Main.jsx';
 import {PLAYER} from '../../constants/general';
-import { generateBoard } from '../../helpers/generateBoard';
-import { setActiveTeam } from '../../constants/globals';
 
-const teamRed = ['jurek', 'albert', 'zosia'];
-const teamBlue = ['maciek', 'magda', 'pawel']
-
-export const Game = ()=>{
-
-    const [active] = React.useState(PLAYER.RED)
-    const [redBoss, setRedBoss]= React.useState(teamRed[0])
-    const [blueBoss, setBlueBoss]= React.useState(teamBlue[0])
-    const board = generateBoard();
-    setActiveTeam(board.first);
-    return (
-        <div className="game">
-            <Team 
-                color="red" 
-                active={active} 
-                team={teamRed} 
-                boss={redBoss}
-                setBoss={setRedBoss}
-            />
-            <Main 
-                boss={{red: redBoss, blue: blueBoss}}
-                board={board.board}
-            />
-            <Team 
-                color="blue" 
-                active={active} 
-                team={teamBlue} 
-                boss={blueBoss}
-                setBoss={setBlueBoss}
-            />
-        </div>
-    )
+export class Game extends React.Component{
+    state = {
+        active: PLAYER.RED
+    }
+    componentDidMount(){
+        this.props.client.send(JSON.stringify({
+            type: "teams"
+          }))
+    }
+    render(){
+        return (
+            <div className="game">
+                <Team 
+                    color="red" 
+                    active={this.state.active} 
+                    team={this.props.teams.red} 
+                    boss={this.props.boss.red}
+                    client={this.props.client}
+                />
+                <Main 
+                    boss={{red: '', blue: ''}}
+                    cards={this.props.cards}
+                    user={this.props.user}
+                    isBoss={this.props.user.id === this.props.boss[this.props.user.team]}
+                />
+                <Team 
+                    color="blue" 
+                    active={this.state.active} 
+                    team={this.props.teams.blue} 
+                    boss={this.props.boss.blue}
+                    client={this.props.client}
+                />
+            </div>
+        )
+    }
 }
