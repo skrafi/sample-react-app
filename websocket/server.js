@@ -24,8 +24,6 @@ const sendMessage = (json) => {
     });
 }
 
-
-
 const messages = ['Test'];
 const users = [];
 const teams = {
@@ -36,7 +34,14 @@ const boss = {
     blue: '',
     red: ''
 }
-let cards = getCards();
+let {cards, activeTeam} = getCards();
+let session = {
+  inProgress: false,
+  left: {
+    blue: 0,
+    red: 0
+  }
+}
 
 const typesDef = {
     CHAT: "chat",
@@ -50,13 +55,18 @@ const typesDef = {
     SET_BOSS: 'set-boss',
     BOSS: 'boss',
     LOGOUT: 'logout',
+    SWITCH_TEAM: 'switch-team',
+    START: 'start',
 }
 
-
+const switchActiveTeam = () => {
+  activeTeam = activeTeam === 'blue' ? 'red':'blue';
+  return activeTeam;
+}
 
 const clients = {};
 wsServer.on('request', function(request){
-    const userId = uuid.v4();
+    let userId = uuid.v4();
     console.log((new Date()) + ' Recieved a new connection from origin ' + request.origin + '.');
     const connection = request.accept(null, request.origin);
     clients[userId] =connection;
@@ -75,18 +85,23 @@ wsServer.on('request', function(request){
           }
           if (dataFromClient.type === typesDef.CARDS) {
             console.log('get cards')
-            json.data = { cards };
+            json.data = { cards, activeTeam };
           }
           if (dataFromClient.type === typesDef.CLICK_CARD) {
             console.log('click card')
             cards[dataFromClient.data].clicked = true;
-            json.data = { cards };
+            if(cards[dataFromClient.data].type !==activeTeam){
+              activeTeam =  switchActiveTeam();
+            }
+            json.data = { cards, activeTeam };
             json.type = typesDef.CARDS;
           }
           if (dataFromClient.type === typesDef.RESTART) {
             console.log('restart')
-            cards = getCards();
-            json.data = { cards };
+            const newBoard = getCards();
+            cards = newBoard.cards;
+            activeTeam = newBoard.activeTeam;
+            json.data = { cards, activeTeam };
             json.type = typesDef.CARDS;
           }
           if (dataFromClient.type === typesDef.LOGIN) {
@@ -94,16 +109,26 @@ wsServer.on('request', function(request){
             const user = {
                 name: dataFromClient.data.name,
                 team: dataFromClient.data.team,
-                isBoss: false, 
-                id: userId,
+                id: dataFromClient.data.id || userId,
             };
-            users.push(user);
+            if(dataFromClient.data.id){
+                const connection = clients[userId];
+                delete clients[userId];
+                userId = dataFromClient.data.id;
+                clients[dataFromClient.data.id] = connection;
+            }
             teams[dataFromClient.data.team].push(user)
+            users.push(user);
+            
             json.data = { user };
           }
           if (dataFromClient.type === typesDef.TEAMS) {
             console.log('teams', teams)
             json.data = { teams };
+          }
+          if (dataFromClient.type === typesDef.SWITCH_TEAM) {
+            console.log('switch team')
+            json.data = { activeTeam: switchActiveTeam() };
           }
           if (dataFromClient.type === typesDef.SET_BOSS) {
             console.log('set boss')
@@ -122,6 +147,13 @@ wsServer.on('request', function(request){
             teams.red = teams.red.filter(t=>t.id!==userId)
             teams.blue = teams.blue.filter(t=>t.id!==userId)
             json.data = { teams };
+          }
+          if (dataFromClient.type === typesDef.START) {
+            console.log('start')
+            session.inProgress = true,
+            session.left.red = activeTeam === 'red' ? 9 : 8;
+            session.left.blue = activeTeam === 'blue' ? 9 : 8;
+            json.data = { session };
           }
           sendMessage(JSON.stringify(json));
           if (dataFromClient.type === typesDef.LOGOUT) {

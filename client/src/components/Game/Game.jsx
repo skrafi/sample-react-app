@@ -7,9 +7,6 @@ import {Main} from '../Main/Main.jsx';
 import {PLAYER} from '../../constants/general';
 
 export class Game extends React.Component{
-    state = {
-        active: PLAYER.RED
-    }
     componentDidMount(){
         this.props.client.send(JSON.stringify({
             type: "teams"
@@ -20,10 +17,10 @@ export class Game extends React.Component{
             <div className="game">
                 <Team 
                     color="red" 
-                    active={this.state.active} 
                     team={this.props.teams.red} 
                     boss={this.props.boss.red}
                     client={this.props.client}
+                    activeTeam={this.props.activeTeam}
                 />
                 <Main 
                     boss={{red: '', blue: ''}}
@@ -33,10 +30,10 @@ export class Game extends React.Component{
                 />
                 <Team 
                     color="blue" 
-                    active={this.state.active} 
                     team={this.props.teams.blue} 
                     boss={this.props.boss.blue}
                     client={this.props.client}
+                    activeTeam={this.props.activeTeam}
                 />
             </div>
         )

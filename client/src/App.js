@@ -21,7 +21,8 @@ class App extends Component {
     user: null,
     teams: {blue: [], red: []},
     cards: [],
-    boss: {red:'', blue:''}
+    boss: {red:'', blue:''},
+    activeTeam: ''
   }
   componentWillMount() {
     client.onopen = () => {
@@ -33,7 +34,7 @@ class App extends Component {
       if(dataFromServer.type==='login' && !this.state.user){
          localStorage.setItem('userName', dataFromServer.data.user.name);
          localStorage.setItem('team', dataFromServer.data.user.team);
-         localStorage.setItem('isBoss', dataFromServer.data.user.isBoss);
+         localStorage.setItem('id', dataFromServer.data.user.id);
         this.setState({user: dataFromServer.data.user})
       }
       if (dataFromServer.type === "teams" || dataFromServer.type === "logout") {
@@ -46,7 +47,13 @@ class App extends Component {
       }
       if (dataFromServer.type === "cards") {
         this.setState({
-            cards: Object.values(dataFromServer.data.cards)
+            cards: Object.values(dataFromServer.data.cards),
+            activeTeam: dataFromServer.data.activeTeam
+        });
+      }
+      if (dataFromServer.type === "switch-team") {
+        this.setState({
+            activeTeam: dataFromServer.data.activeTeam
         });
       }
       if (dataFromServer.type === "set-boss" || dataFromServer.type === "boss") {
@@ -67,10 +74,10 @@ class App extends Component {
   componentDidMount(){
     const name = localStorage.getItem('userName');
     const team = localStorage.getItem('team');
-    const isBoss = localStorage.getItem('isBoss');
+    const id = localStorage.getItem('id');
     if(name){
       this.setState({user: {
-        name, team, isBoss
+        name, team, id
       }})
       
     }
@@ -80,7 +87,7 @@ class App extends Component {
     if(prevState.loading!==this.state.loading && !this.state.loading && this.state.user){
       client.send(JSON.stringify({
         type: 'login',
-        data: { name: this.state.user.name, team: this.state.user.team }
+        data: { name: this.state.user.name, team: this.state.user.team, id: this.state.user.id }
       }))
       client.send(JSON.stringify({
         type: 'teams',
@@ -100,7 +107,9 @@ class App extends Component {
               client={client} 
               teams={this.state.teams} 
               cards={this.state.cards}
-              boss={this.state.boss}/> : <Login client={client}/>}
+              boss={this.state.boss}
+              activeTeam={this.state.activeTeam}
+            /> : <Login client={client}/>}
       </div>
       </ClientContext.Provider>
     
