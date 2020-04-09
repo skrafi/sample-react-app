@@ -24,12 +24,14 @@ export class Game extends React.Component{
                     boss={this.props.boss.red}
                     client={this.props.client}
                     activeTeam={this.props.activeTeam}
+                    userColor={this.props.user.team}
                 />
                 <Main 
                     boss={{red: '', blue: ''}}
                     cards={this.props.cards}
                     user={this.props.user}
                     isBoss={this.state.isBoss}
+                    activeTeam={this.props.activeTeam}
                 />
                 <Team 
                     color="blue" 
@@ -37,6 +39,7 @@ export class Game extends React.Component{
                     boss={this.props.boss.blue}
                     client={this.props.client}
                     activeTeam={this.props.activeTeam}
+                    userColor={this.props.user.team}
                 />
             </div>
         )
