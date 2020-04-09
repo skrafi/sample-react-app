@@ -7,6 +7,7 @@ import {ClientContext} from './context/clientContext.jsx'
 
 import {w3cwebsocket} from 'websocket';
 import { Login } from './components/Login/Login';
+import { ACTION_TYPES } from './constants/actionsTypes';
 
 const local = false;
 const LOCALHOST = 'ws://127.0.0.1:4000'
@@ -31,13 +32,13 @@ class App extends Component {
     }
     client.onmessage=(message)=>{
       const dataFromServer = JSON.parse(message.data);
-      if(dataFromServer.type==='login' && !this.state.user){
+      if(dataFromServer.type===ACTION_TYPES.LOGIN && !this.state.user){
          localStorage.setItem('userName', dataFromServer.data.user.name);
          localStorage.setItem('team', dataFromServer.data.user.team);
          localStorage.setItem('id', dataFromServer.data.user.id);
         this.setState({user: dataFromServer.data.user})
       }
-      if (dataFromServer.type === "teams" || dataFromServer.type === "logout") {
+      if (dataFromServer.type === ACTION_TYPES.TEAMS || dataFromServer.type === ACTION_TYPES.LOGOUT) {
         this.setState({
             teams: {
                 blue: Object.values(dataFromServer.data.teams.blue),
@@ -45,18 +46,18 @@ class App extends Component {
             }
         });
       }
-      if (dataFromServer.type === "cards") {
+      if (dataFromServer.type === ACTION_TYPES.CARDS) {
         this.setState({
             cards: Object.values(dataFromServer.data.cards),
             activeTeam: dataFromServer.data.activeTeam
         });
       }
-      if (dataFromServer.type === "switch-team") {
+      if (dataFromServer.type === ACTION_TYPES.SWITCH_TEAM) {
         this.setState({
             activeTeam: dataFromServer.data.activeTeam
         });
       }
-      if (dataFromServer.type === "set-boss" || dataFromServer.type === "boss") {
+      if (dataFromServer.type === ACTION_TYPES.SET_BOSS || dataFromServer.type === ACTION_TYPES.BOSS) {
         this.setState({
             boss: {
               red: (dataFromServer.data.boss.red),
@@ -64,7 +65,7 @@ class App extends Component {
             }
         });
       }
-      if (dataFromServer.type === "logout-me") {
+      if (dataFromServer.type === ACTION_TYPES.LOGOUT) {
         this.setState({
           user: null
       });
@@ -86,14 +87,14 @@ class App extends Component {
   componentDidUpdate(prevProps,prevState){
     if(prevState.loading!==this.state.loading && !this.state.loading && this.state.user){
       client.send(JSON.stringify({
-        type: 'login',
+        type: ACTION_TYPES.LOGIN,
         data: { name: this.state.user.name, team: this.state.user.team, id: this.state.user.id }
       }))
       client.send(JSON.stringify({
-        type: 'teams',
+        type: ACTION_TYPES.TEAMS,
       }))
       client.send(JSON.stringify({
-        type: 'boss',
+        type: ACTION_TYPES.BOSS,
       }))
     }
   }

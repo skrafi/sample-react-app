@@ -1,5 +1,6 @@
 import React from 'react';
 import { PLAYER } from '../../constants/general';
+import { ACTION_TYPES } from '../../constants/actionsTypes';
 
 export class Login extends React.Component {
     state={
@@ -8,7 +9,7 @@ export class Login extends React.Component {
     }
     login = () => {
         this.props.client.send(JSON.stringify({
-            type: 'login',
+            type: ACTION_TYPES.LOGIN,
             data: {
                 name: this.state.name,
                 team: this.state.team

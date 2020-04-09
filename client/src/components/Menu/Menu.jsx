@@ -1,16 +1,17 @@
 import React from 'react';
+import { ACTION_TYPES } from '../../constants/actionsTypes';
 
 export const Menu = ({client}) => {
     const restart = () => {
         client.send(JSON.stringify({
-            type: "restart"
+            type: ACTION_TYPES.RESTART
           }))
     }
     const logout = () => {
         localStorage.removeItem('userName')
         localStorage.removeItem('team')
         client.send(JSON.stringify({
-            type: "logout"
+            type: ACTION_TYPES.LOGOUT
           }))
     }
     return <div>

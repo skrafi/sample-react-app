@@ -1,11 +1,12 @@
 import React from 'react';
 import './Board.css';
 import {Card} from './Card.jsx';
+import { ACTION_TYPES } from '../../constants/actionsTypes';
 
 export class Board extends React.Component{
     getCards = () => {
         this.props.client.send(JSON.stringify({
-            type: "cards"
+            type: ACTION_TYPES.CARDS
           }))
     }
 

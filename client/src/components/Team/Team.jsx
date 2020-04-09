@@ -1,11 +1,12 @@
 import React from 'react';
 
 import './Team.css';
+import { ACTION_TYPES } from '../../constants/actionsTypes';
 
 export const Team = ({color, team, boss, client, activeTeam}) => {
     const setBoss = (value) => {
         client.send(JSON.stringify({
-            type: 'set-boss',
+            type: ACTION_TYPES.SET_BOSS,
             data: {
                 userId: value,
                 team: color
@@ -14,7 +15,7 @@ export const Team = ({color, team, boss, client, activeTeam}) => {
     }
     const switchTeam = () => {
         client.send(JSON.stringify({
-            type: 'switch-team',
+            type: ACTION_TYPES.SWITCH_TEAM,
         }))
     }
     return <div className={`wrapper ${activeTeam===color ? color: ''}`}>

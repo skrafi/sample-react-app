@@ -1,10 +1,11 @@
 import React from 'react';
+import { ACTION_TYPES } from '../../constants/actionsTypes';
 
 
 export const Card = ({card, client, index, boss}) => {
     const clickCard = () => {
         client.send(JSON.stringify({
-            type: "click-card",
+            type: ACTION_TYPES.CLICK_CARD,
             data: index
           }))
     }

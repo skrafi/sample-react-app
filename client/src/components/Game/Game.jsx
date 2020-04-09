@@ -4,12 +4,15 @@ import './Game.css';
 
 import {Team} from '../Team/Team.jsx';
 import {Main} from '../Main/Main.jsx';
-import {PLAYER} from '../../constants/general';
+import { ACTION_TYPES } from '../../constants/actionsTypes';
 
 export class Game extends React.Component{
+    state = {
+        isBoss: this.props.user.id === this.props.boss[this.props.user.team]
+    }
     componentDidMount(){
         this.props.client.send(JSON.stringify({
-            type: "teams"
+            type: ACTION_TYPES.TEAMS
           }))
     }
     render(){
@@ -26,7 +29,7 @@ export class Game extends React.Component{
                     boss={{red: '', blue: ''}}
                     cards={this.props.cards}
                     user={this.props.user}
-                    isBoss={this.props.user.id === this.props.boss[this.props.user.team]}
+                    isBoss={this.state.isBoss}
                 />
                 <Team 
                     color="blue" 
