@@ -15,7 +15,13 @@ export class Game extends React.Component{
             type: ACTION_TYPES.TEAMS
           }))
     }
+    componentDidUpdate(props){
+        if(props.user.id !== this.props.user.id || this.props.boss[this.props.user.team] !== props.boss[this.props.user.team]){
+            this.setState({isBoss: this.props.user.id === this.props.boss[this.props.user.team]})
+        }
+    }
     render(){
+        console.log(this.props.user.id,' / ', this.props.boss[this.props.user.team]);
         return (
             <div className="game">
                 <Team 
@@ -25,6 +31,7 @@ export class Game extends React.Component{
                     client={this.props.client}
                     activeTeam={this.props.activeTeam}
                     userColor={this.props.user.team}
+                    session={this.props.session}
                 />
                 <Main 
                     boss={{red: '', blue: ''}}
@@ -32,6 +39,7 @@ export class Game extends React.Component{
                     user={this.props.user}
                     isBoss={this.state.isBoss}
                     activeTeam={this.props.activeTeam}
+                    session={this.props.session}
                 />
                 <Team 
                     color="blue" 
@@ -40,6 +48,7 @@ export class Game extends React.Component{
                     client={this.props.client}
                     activeTeam={this.props.activeTeam}
                     userColor={this.props.user.team}
+                    session={this.props.session}
                 />
             </div>
         )

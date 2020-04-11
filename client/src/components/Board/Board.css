@@ -5,11 +5,11 @@
 }
 
 .clicked-red { 
-    background-color: #fa8072;
+    background-color: #a40000;
 }
 
 .clicked-blue { 
-    background-color:#7cb9e8;
+    background-color:#0095b6;
 }
 
 .clicked-neutral { 
@@ -21,15 +21,15 @@
 }
 
 .blue{
-    -moz-box-shadow:    inset 0 0 20px #7cb9e8;
-    -webkit-box-shadow: inset 0 0 20px #7cb9e8;
-    box-shadow:         inset 0 0 20px #7cb9e8;
+    -moz-box-shadow:    inset 0 0 20px #0095b6;
+    -webkit-box-shadow: inset 0 0 20px #0095b6;
+    box-shadow:         inset 0 0 20px #0095b6;
  }
 
  .red{
-    -moz-box-shadow:    inset 0 0 20px #fa8072;
-    -webkit-box-shadow: inset 0 0 20px #fa8072;
-    box-shadow:         inset 0 0 20px #fa8072;
+    -moz-box-shadow:    inset 0 0 20px #a40000;
+    -webkit-box-shadow: inset 0 0 20px #a40000;
+    box-shadow:         inset 0 0 20px #a40000;
  }
 
  .neutral{
@@ -39,12 +39,11 @@
  }
 
  .killer{
-    -moz-box-shadow:    inset 0 0 25px black;
-    -webkit-box-shadow: inset 0 0 25px black;
-    box-shadow:         inset 0 0 25px black;
+    background-color: black !important;
+    color: white !important;
  }
 
-.card {
+.card2 {
     height: 100%;
     transition: transform 1s;
     transform-style: preserve-3d;
@@ -59,6 +58,7 @@
       font-size: 28px;
       font-weight: 500;
       color: #1a1110;
+      
   }
 
   .card__face {
@@ -66,9 +66,15 @@
     height: 100%;
     width: 100%;
     backface-visibility: hidden;
-    border: 1px solid #cccccc;
   }
+
   
+  
+  .card__face--front {
+    background-color: #f6f6f6;
+    
+  }
+
   .card__face--back {
     transform: rotateY( 180deg );
     
@@ -78,7 +84,7 @@
       opacity: 0.2;
   }
 
-  .card.is-flipped {
+  .card2.is-flipped {
     transform: rotateY(180deg);
   }
 
@@ -185,6 +191,21 @@
     z-index: 10;
   }
 
+  .error {
+    border-radius: 50%;
+    background-color: red;
+    color: white;
+    position: absolute;
+    right:5px;
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+  }
+
   .show {
     
     -webkit-animation: fadeInFromNone 3s cubic-bezier(0.1, 0.3, 0.1, 0.1) 1; /* Safari 4+ */
@@ -207,4 +228,5 @@
       margin: 10px 2%;
       height: 100px;
       position: relative;
+      box-shadow: 0px 0 10px 2px rgba(0,0,0,0.3);
   }

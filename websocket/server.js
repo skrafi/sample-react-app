@@ -57,6 +57,7 @@ const typesDef = {
     LOGOUT: 'logout',
     SWITCH_TEAM: 'switch-team',
     START: 'start',
+    END: 'end',
 }
 
 const switchActiveTeam = () => {
@@ -73,9 +74,7 @@ wsServer.on('request', function(request){
     console.log('connected: ' + userId + ' in ' + Object.getOwnPropertyNames(clients))
 
     connection.on('message', function(message) {
-        console.log('message')
         if (message.type === 'utf8') {
-            console.log('type utf8')
           const dataFromClient = JSON.parse(message.utf8Data);
           const json = { type: dataFromClient.type };
           if (dataFromClient.type === typesDef.CHAT) {
@@ -84,8 +83,8 @@ wsServer.on('request', function(request){
             json.data = { messages };
           }
           if (dataFromClient.type === typesDef.CARDS) {
-            console.log('get cards')
-            json.data = { cards, activeTeam };
+            console.log('get cards',session)
+            json.data = { cards, activeTeam, session };
           }
           if (dataFromClient.type === typesDef.CLICK_CARD) {
             console.log('click card')
@@ -93,7 +92,10 @@ wsServer.on('request', function(request){
             if(cards[dataFromClient.data].type !==activeTeam){
               activeTeam =  switchActiveTeam();
             }
-            json.data = { cards, activeTeam };
+            if(cards[dataFromClient.data].type === 'blue' || cards[dataFromClient.data].type === 'red'){
+              session.left[cards[dataFromClient.data].type]--;
+            }
+            json.data = { cards, activeTeam, session };
             json.type = typesDef.CARDS;
           }
           if (dataFromClient.type === typesDef.RESTART) {
@@ -101,7 +103,7 @@ wsServer.on('request', function(request){
             const newBoard = getCards();
             cards = newBoard.cards;
             activeTeam = newBoard.activeTeam;
-            json.data = { cards, activeTeam };
+            json.data = { cards, activeTeam, session };
             json.type = typesDef.CARDS;
           }
           if (dataFromClient.type === typesDef.LOGIN) {
@@ -139,20 +141,32 @@ wsServer.on('request', function(request){
           }
           if (dataFromClient.type === typesDef.BOSS) {
             console.log('get boss')
-            json.data = { boss: boss};
+            json.data = { boss: boss, session};
           }
           if (dataFromClient.type === typesDef.LOGOUT) {
             console.log('logout')
             delete users[userId];
             teams.red = teams.red.filter(t=>t.id!==userId)
             teams.blue = teams.blue.filter(t=>t.id!==userId)
+            if(boss.red===userId){
+              boss.red=""
+            }
+            if(boss.blue===userId){
+              boss.blue=""
+            }
             json.data = { teams };
           }
           if (dataFromClient.type === typesDef.START) {
             console.log('start')
-            session.inProgress = true,
+            session.inProgress = !session.inProgress,
             session.left.red = activeTeam === 'red' ? 9 : 8;
             session.left.blue = activeTeam === 'blue' ? 9 : 8;
+            json.data = { session };
+
+          }
+          if (dataFromClient.type === typesDef.END) {
+            console.log('end')
+            session.inProgress = false,
             json.data = { session };
           }
           sendMessage(JSON.stringify(json));

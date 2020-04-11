@@ -2,6 +2,8 @@ import React from 'react';
 import { PLAYER } from '../../constants/general';
 import { ACTION_TYPES } from '../../constants/actionsTypes';
 
+import './Login.css';
+
 export class Login extends React.Component {
     state={
         name: '',
@@ -19,13 +21,23 @@ export class Login extends React.Component {
 
     render(){
         return (
-            <div>
-                <input value={this.state.name} onChange={(e)=>this.setState({name: e.target.value})}/>
-                <select onChange={(e)=>{this.setState({team: e.target.value})}} value={this.state.team}>
-                    <option value={PLAYER.RED}>{PLAYER.RED}</option>
-                    <option value={PLAYER.BLUE}>{PLAYER.BLUE}</option>
-                </select>
-                <button onClick={()=>this.login()}>Send</button>
+            <div className="login-wrapper">
+            <div className="login">
+                <div className="section full-width">
+                    <div className="label">Username</div>
+                    <input className="input-login" value={this.state.name} onChange={(e)=>this.setState({name: e.target.value})}/>
+                </div>
+                <div className="section full-width">
+                    <div className="label">Team</div>
+                    <select className="select-login" onChange={(e)=>{this.setState({team: e.target.value})}} value={this.state.team}>
+                        <option value={PLAYER.RED}>{PLAYER.RED}</option>
+                        <option value={PLAYER.BLUE}>{PLAYER.BLUE}</option>
+                    </select>
+                </div>
+                
+                <hr/>
+                <button className="login-btn btn" onClick={()=>this.login()}>Send</button>
+            </div>
             </div>
         );
     }

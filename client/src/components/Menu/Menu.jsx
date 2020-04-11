@@ -1,7 +1,7 @@
 import React from 'react';
 import { ACTION_TYPES } from '../../constants/actionsTypes';
 
-export const Menu = ({client}) => {
+export const Menu = ({client, session}) => {
     const restart = () => {
         client.send(JSON.stringify({
             type: ACTION_TYPES.RESTART
@@ -14,10 +14,21 @@ export const Menu = ({client}) => {
             type: ACTION_TYPES.LOGOUT
           }))
     }
+    const start = () => {
+        client.send(JSON.stringify({
+            type: ACTION_TYPES.START
+          }))
+    }
+    const end = () => {
+        console.log('end');
+        client.send(JSON.stringify({
+            type: ACTION_TYPES.END
+          }))
+    }
     return <div>
-        <button className="button" onClick={restart}>Restart</button>
-        <button className="button">Tasuj</button>
-        <button className="button">Plansza</button>
-        <button className="button" onClick={logout}>Logout</button>
+        {!session.inProgress &&<button className="btn" onClick={start}>Start</button>}
+        {!session.inProgress && <button className="btn" onClick={restart}>Board</button>}
+        {session.inProgress && <button className="btn" onClick={end}>Stop</button>}
+        <button className="btn" onClick={logout}>Logout</button>
     </div>
 }

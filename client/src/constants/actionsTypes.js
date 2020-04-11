@@ -11,4 +11,5 @@ export const ACTION_TYPES = {
     LOGOUT: 'logout',
     SWITCH_TEAM: 'switch-team',
     START: 'start',
+    END: 'end',
 }

@@ -9,7 +9,7 @@ import {w3cwebsocket} from 'websocket';
 import { Login } from './components/Login/Login';
 import { ACTION_TYPES } from './constants/actionsTypes';
 
-const local = false;
+const local = true;
 const LOCALHOST = 'ws://127.0.0.1:4000'
 const BACKEND = local ? LOCALHOST : AWS_SERVER;
 const client = new w3cwebsocket(BACKEND)
@@ -23,12 +23,24 @@ class App extends Component {
     teams: {blue: [], red: []},
     cards: [],
     boss: {red:'', blue:''},
-    activeTeam: ''
+    activeTeam: '',
+    session: {
+      inProgess: false,
+      left: {
+        blue: 0,
+        red: 0
+      }
+    }
   }
   componentWillMount() {
     client.onopen = () => {
       console.log('Websocket client connected');
       this.setState({loading: false})
+    }
+    client.onclose=()=>{
+      localStorage.removeItem('userName')
+      localStorage.removeItem('team')
+      localStorage.removeItem('id')
     }
     client.onmessage=(message)=>{
       const dataFromServer = JSON.parse(message.data);
@@ -47,9 +59,11 @@ class App extends Component {
         });
       }
       if (dataFromServer.type === ACTION_TYPES.CARDS) {
+        console.log(dataFromServer.data);
         this.setState({
             cards: Object.values(dataFromServer.data.cards),
-            activeTeam: dataFromServer.data.activeTeam
+            activeTeam: dataFromServer.data.activeTeam,
+            session: dataFromServer.data.session
         });
       }
       if (dataFromServer.type === ACTION_TYPES.SWITCH_TEAM) {
@@ -65,6 +79,15 @@ class App extends Component {
             }
         });
       }
+      if (dataFromServer.type === ACTION_TYPES.START || dataFromServer.type === ACTION_TYPES.END) {
+        this.setState({
+          session: {
+            ...dataFromServer.data.session
+          }
+        });
+     }
+
+
       if (dataFromServer.type === ACTION_TYPES.LOGOUT) {
         this.setState({
           user: null
@@ -110,6 +133,7 @@ class App extends Component {
               cards={this.state.cards}
               boss={this.state.boss}
               activeTeam={this.state.activeTeam}
+              session={this.state.session}
             /> : <Login client={client}/>}
       </div>
       </ClientContext.Provider>
