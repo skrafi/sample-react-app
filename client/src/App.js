@@ -10,7 +10,7 @@ import { Login } from './components/Login/Login';
 import { ACTION_TYPES } from './constants/actionsTypes';
 import { WinnerBox } from './components/WinnerBox/WinnerBox';
 
-const local = true;
+const local = false;
 const LOCALHOST = 'ws://127.0.0.1:4000'
 const BACKEND = local ? LOCALHOST : AWS_SERVER;
 const client = new w3cwebsocket(BACKEND)
