@@ -8,6 +8,7 @@ import {ClientContext} from './context/clientContext.jsx'
 import {w3cwebsocket} from 'websocket';
 import { Login } from './components/Login/Login';
 import { ACTION_TYPES } from './constants/actionsTypes';
+import { WinnerBox } from './components/WinnerBox/WinnerBox';
 
 const local = true;
 const LOCALHOST = 'ws://127.0.0.1:4000'
@@ -30,7 +31,8 @@ class App extends Component {
         blue: 0,
         red: 0
       }
-    }
+    },
+    winner: ''
   }
   componentWillMount() {
     client.onopen = () => {
@@ -63,7 +65,8 @@ class App extends Component {
         this.setState({
             cards: Object.values(dataFromServer.data.cards),
             activeTeam: dataFromServer.data.activeTeam,
-            session: dataFromServer.data.session
+            session: dataFromServer.data.session,
+            winner: dataFromServer.data.winner,
         });
       }
       if (dataFromServer.type === ACTION_TYPES.SWITCH_TEAM) {
@@ -82,7 +85,8 @@ class App extends Component {
       if (dataFromServer.type === ACTION_TYPES.START || dataFromServer.type === ACTION_TYPES.END) {
         this.setState({
           session: {
-            ...dataFromServer.data.session
+            ...dataFromServer.data.session,
+            winner: dataFromServer.data.winner,
           }
         });
      }
@@ -122,20 +126,22 @@ class App extends Component {
     }
   }
   render() {
+    console.log(this.state.winner, 'app');
     return this.state.loading? <div>Loading</div> :
       <ClientContext.Provider value={client}>
-      <div className="App">
-        {this.state.user 
-          ? <Game 
-              user={this.state.user} 
-              client={client} 
-              teams={this.state.teams} 
-              cards={this.state.cards}
-              boss={this.state.boss}
-              activeTeam={this.state.activeTeam}
-              session={this.state.session}
-            /> : <Login client={client}/>}
-      </div>
+        <div className="App">
+        <WinnerBox winner={this.state.winner} client={client}/>
+          {this.state.user 
+            ? <Game 
+                user={this.state.user} 
+                client={client} 
+                teams={this.state.teams} 
+                cards={this.state.cards}
+                boss={this.state.boss}
+                activeTeam={this.state.activeTeam}
+                session={this.state.session}
+              /> : <Login client={client}/>}
+        </div>
       </ClientContext.Provider>
     
   }

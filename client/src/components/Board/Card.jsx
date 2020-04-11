@@ -2,12 +2,12 @@ import React from 'react';
 import { ACTION_TYPES } from '../../constants/actionsTypes';
 
 
-export const Card = ({card, client, index, boss, user, activeTeam}) => {
+export const Card = ({card, client, index, boss, user, activeTeam, inProgress}) => {
     const [guess, setGuess] = React.useState(false);
     const [wrong, setWrong] = React.useState(false);
     const clickCard = () => {
         
-        if(card.clicked || (user.team !== activeTeam && user.name!=='test')){
+        if(!inProgress || card.clicked || (user.team !== activeTeam && user.name!=='test')){
             return;
         }
         if(activeTeam=== card.type){

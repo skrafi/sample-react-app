@@ -16,7 +16,17 @@ export class Board extends React.Component{
 
     render() {
         return <div className="board">
-            {this.props.cards.map((card,index)=> <Card activeTeam={this.props.activeTeam} user={this.props.user} boss={this.props.isBoss} client={this.props.client} key={index} card={card} index={index}/>)}
+            {this.props.cards.map((card,index)=> (
+                <Card 
+                    activeTeam={this.props.activeTeam} 
+                    user={this.props.user} 
+                    boss={this.props.isBoss} 
+                    client={this.props.client} 
+                    key={index} 
+                    card={card} 
+                    index={index}
+                    inProgress={this.props.session.inProgress}
+                />))}
         </div>
     }
 }

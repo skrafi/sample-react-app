@@ -24,11 +24,14 @@ export const Menu = ({client, session}) => {
         client.send(JSON.stringify({
             type: ACTION_TYPES.END
           }))
+          client.send(JSON.stringify({
+            type: ACTION_TYPES.RESTART
+          }))
     }
     return <div>
         {!session.inProgress &&<button className="btn" onClick={start}>Start</button>}
         {!session.inProgress && <button className="btn" onClick={restart}>Board</button>}
-        {session.inProgress && <button className="btn" onClick={end}>Stop</button>}
+        {session.inProgress && <button className="btn" onClick={end}>End Game</button>}
         <button className="btn" onClick={logout}>Logout</button>
     </div>
 }

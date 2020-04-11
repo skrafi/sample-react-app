@@ -3,7 +3,7 @@ import React from 'react';
 import './Team.css';
 import { ACTION_TYPES } from '../../constants/actionsTypes';
 
-export const Team = ({color, team, boss, client, activeTeam, session}) => {
+export const Team = ({color, team, boss, client, activeTeam, session, userColor}) => {
     const setBoss = (value) => {
         client.send(JSON.stringify({
             type: ACTION_TYPES.SET_BOSS,
@@ -14,6 +14,10 @@ export const Team = ({color, team, boss, client, activeTeam, session}) => {
         }))
     }
     const switchTeam = () => {
+        console.log(userColor, activeTeam);
+        if(userColor!==activeTeam){
+            return;
+        }
         client.send(JSON.stringify({
             type: ACTION_TYPES.SWITCH_TEAM,
         }))

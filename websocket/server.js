@@ -42,6 +42,7 @@ let session = {
     red: 0
   }
 }
+let winner = "";
 
 const typesDef = {
     CHAT: "chat",
@@ -84,7 +85,7 @@ wsServer.on('request', function(request){
           }
           if (dataFromClient.type === typesDef.CARDS) {
             console.log('get cards',session)
-            json.data = { cards, activeTeam, session };
+            json.data = { cards, activeTeam, session, winner };
           }
           if (dataFromClient.type === typesDef.CLICK_CARD) {
             console.log('click card')
@@ -94,8 +95,11 @@ wsServer.on('request', function(request){
             }
             if(cards[dataFromClient.data].type === 'blue' || cards[dataFromClient.data].type === 'red'){
               session.left[cards[dataFromClient.data].type]--;
+              if(!session.left[cards[dataFromClient.data].type]){
+                winner = cards[dataFromClient.data].type;
+              }
             }
-            json.data = { cards, activeTeam, session };
+            json.data = { cards, activeTeam, session, winner };
             json.type = typesDef.CARDS;
           }
           if (dataFromClient.type === typesDef.RESTART) {
@@ -167,7 +171,8 @@ wsServer.on('request', function(request){
           if (dataFromClient.type === typesDef.END) {
             console.log('end')
             session.inProgress = false,
-            json.data = { session };
+            winner = '';
+            json.data = { session, winner };
           }
           sendMessage(JSON.stringify(json));
           if (dataFromClient.type === typesDef.LOGOUT) {
