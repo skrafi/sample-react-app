@@ -100,7 +100,7 @@ wsServer.on('request', function(request){
               }
             }
             if(cards[dataFromClient.data].type === 'killer'){
-              winner = users[userId].team === 'blue' ? 'red' : 'blue';
+              winner = activeTeam;
             }
             json.data = { cards, activeTeam, session, winner };
             json.type = typesDef.CARDS;
