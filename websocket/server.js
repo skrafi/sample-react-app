@@ -25,7 +25,7 @@ const sendMessage = (json) => {
 }
 
 const messages = ['Test'];
-const users = [];
+const users = {};
 const teams = {
     blue: [],
     red: []
@@ -100,7 +100,7 @@ wsServer.on('request', function(request){
               }
             }
             if(cards[dataFromClient.data].type === 'killer'){
-              winner = activeTeam === 'blue' ? 'red' : 'blue';
+              winner = users[userId].team === 'blue' ? 'red' : 'blue';
             }
             json.data = { cards, activeTeam, session, winner };
             json.type = typesDef.CARDS;
@@ -127,7 +127,7 @@ wsServer.on('request', function(request){
                 clients[dataFromClient.data.id] = connection;
             }
             teams[dataFromClient.data.team].push(user)
-            users.push(user);
+            users[userId] = user;
             
             json.data = { user };
           }
