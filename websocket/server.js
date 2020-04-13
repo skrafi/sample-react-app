@@ -113,24 +113,6 @@ wsServer.on('request', function(request){
             json.data = { cards, activeTeam, session };
             json.type = typesDef.CARDS;
           }
-          if (dataFromClient.type === typesDef.LOGIN) {
-            console.log('login')
-            const user = {
-                name: dataFromClient.data.name,
-                team: dataFromClient.data.team,
-                id: dataFromClient.data.id || userId,
-            };
-            if(dataFromClient.data.id){
-                const connection = clients[userId];
-                delete clients[userId];
-                userId = dataFromClient.data.id;
-                clients[dataFromClient.data.id] = connection;
-            }
-            teams[dataFromClient.data.team].push(user)
-            users[userId] = user;
-            
-            json.data = { user };
-          }
           if (dataFromClient.type === typesDef.TEAMS) {
             console.log('teams', teams)
             json.data = { teams };
@@ -181,6 +163,27 @@ wsServer.on('request', function(request){
           if (dataFromClient.type === typesDef.LOGOUT) {
               const json={type:'logout-me'}
                 clients[userId].sendUTF(JSON.stringify(json));
+          }
+          if (dataFromClient.type === typesDef.LOGIN) {
+            console.log('login')
+            const user = {
+                name: dataFromClient.data.name,
+                team: dataFromClient.data.team,
+                id: dataFromClient.data.id || userId,
+            };
+            if(dataFromClient.data.id){
+                const connection = clients[userId];
+                delete clients[userId];
+                userId = dataFromClient.data.id;
+                clients[dataFromClient.data.id] = connection;
+            }
+
+            teams[dataFromClient.data.team].push(user)
+            users[userId] = user;
+            
+            json.data = { user };
+            json.type ='login'
+            clients[userId].sendUTF(JSON.stringify(json));
           }
         }
     });

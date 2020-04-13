@@ -9,6 +9,7 @@ export const ACTION_TYPES = {
     SET_BOSS: 'set-boss',
     BOSS: 'boss',
     LOGOUT: 'logout',
+    LOGOUT_ME: 'logout-me',
     SWITCH_TEAM: 'switch-team',
     START: 'start',
     END: 'end',

@@ -92,7 +92,7 @@ class App extends Component {
      }
 
 
-      if (dataFromServer.type === ACTION_TYPES.LOGOUT) {
+      if (dataFromServer.type === ACTION_TYPES.LOGOUT_ME) {
         this.setState({
           user: null
       });
