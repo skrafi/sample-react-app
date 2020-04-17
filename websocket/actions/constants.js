@@ -1,6 +1,7 @@
 const PLAYER = {
     RED: 'red',
-    BLUE: 'blue'
+    BLUE: 'blue',
+    BALANCE: 'balance'
 }
 
 const BOARD = {

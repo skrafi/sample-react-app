@@ -30,6 +30,7 @@ export class Login extends React.Component {
                 <div className="section full-width">
                     <div className="label">Team</div>
                     <select className="select-login" onChange={(e)=>{this.setState({team: e.target.value})}} value={this.state.team}>
+                        <option value={PLAYER.BALANCE}>Zbalansuj teamy</option>
                         <option value={PLAYER.RED}>{PLAYER.RED}</option>
                         <option value={PLAYER.BLUE}>{PLAYER.BLUE}</option>
                     </select>

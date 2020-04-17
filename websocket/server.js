@@ -166,6 +166,9 @@ wsServer.on('request', function(request){
           }
           if (dataFromClient.type === typesDef.LOGIN) {
             console.log('login')
+            if (dataFromClient.data.team == 'balance') {
+              dataFromClient.data.team = (teams['red'].len > teams['blue'].len ? 'blue' : 'red')
+            }
             const user = {
                 name: dataFromClient.data.name,
                 team: dataFromClient.data.team,
