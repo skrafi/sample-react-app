@@ -15,7 +15,7 @@ const WORDS = [
     'księżniczka','trucizna', 'chochlik', 'klawisz', 'mistrz',
     'stołek', 'kciuk', 'szkoła', 'most', 'bomba',
     'ruletka', 'statek', 'trawa', 'siano', 'lew',
-    'talia', 'paluszki', 'ogień', 'szkło',
+    'niezgoda', 'talia', 'paluszki', 'ogień', 'szkło',
     'wojna', 'mur', 'pociecha', 'plaża', 'szczyt',
     'zmywacz', 'dzięcioł', 'plik', 'awaria', 'ucho',
     'pazur', 'warsztat', 'węgiel', 'miesiąc', 'warunek',
@@ -58,7 +58,21 @@ const WORDS = [
     'kropka', 'widelec', 'tchórz', 'nóż', 'babka', 'złodziej', 'wiosna', 'szmugiel', 'zmiana', 'krzesło', 'bermudy',
     'napad', 'paleta', 'meksyk', 'kozioł', 'kościół', 'antarktyda', 'płot', 'dwór', 'konar', 'kostium',
     'pilot', 'groszek', 'żołnierz', 'kalosz', 'korzenie', 'taniec', 'mamut', 'róża', 'smok',
-    'toaleta', 'robak', 'karta', 'czujka', 'koncert', 'Hollywood', 'kasa', 'nos'
+    'toaleta', 'robak', 'karta', 'czujka', 'koncert', 'Hollywood', 'kasa', 'nos',
+    'kryształ', 'dach', 'niebo', 'lokówki', 'puszka',
+    'atrament', 'głos', 'hamulce', 'żołnierz', 'żebro',
+    'zakonnica', 'zdjęcie', 'plecak', 'przewodnik', 'strumień',
+    'list', 'okoń', 'błąd', 'doniczka',
+    'bateria', 'masło', 'granat', 'granat', 'północ',
+    'papuga', 'ogar', 'koperta', 'gazeta', 'róg',
+    'tunel', 'kosz', 'piec', 'dentysta', 'jajko',
+    'pchła', 'scena', 'deskorolka', 'strych', 'pigułka',
+    'gąbka', 'korek', 'skorpion', 'legenda', 'szarlotka',
+    'dolina', 'pielęgniarka', 'galaktyka', 'plaster',
+    'opona', 'szminka', 'gniazdo', 'kłoda', 'pianino',
+    'wykałaczka', 'zapalniczka', 'ołówek', 'buda', 'pielucha',
+    'rachunek', 'śruba', 'huśtawka', 'pilot', 'mrówka',
+    'żart', 'mróz', 'bajka', 'podeszwa', 'wazon'
 ]
 
 function getRandom(number){
@@ -66,15 +80,16 @@ function getRandom(number){
 }
 
 function getWords() {
+    const uniqueWords = new Set(...WORDS);
     const numbers = [];
-    for(let i=0;i<WORDS.length;i++){
+    for(let i=0;i<uniqueWords.length;i++){
         numbers[i] = i;
     }
     const words = [];
     let amount = 0;
     while(amount<25){
         const spot = numbers.splice(getRandom(numbers.length),1);
-        words.push(WORDS[spot]);
+        words.push(uniqueWords[spot]);
         amount++;
     }
     return words;
